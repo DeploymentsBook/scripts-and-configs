@@ -1,6 +1,6 @@
-Changes to /etc/mysql/my.cnf.d/openstack.cnf
+/etc/mysql/my.cnf.d/openstack.cnf:
+
 [mysqld]
-bind-address = YOUR_PUBLIC_ADDRESS
 default-storage-engine = innodb
 innodb_file_per_table
 collation-server = utf8_general_ci
