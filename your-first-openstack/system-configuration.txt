@@ -1,4 +1,4 @@
-Controller: /etc/network/interfaces
+Controller: /etc/network/interfaces:
 
 # The loopback network interface
 auto lo
@@ -17,6 +17,11 @@ iface eth0 inet static
 # Tenant network (no address directly assigned)
 auto eth1
 iface eth1 inet manual
+
+Controller and Compute: Add to /etc/hosts:
+
+192.168.122.2   controller
+192.168.122.5   compute
 
 Controller: /etc/mysql/my.cnf.d/openstack.cnf:
 
