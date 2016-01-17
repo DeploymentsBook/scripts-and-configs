@@ -1,4 +1,24 @@
-/etc/mysql/my.cnf.d/openstack.cnf:
+Controller: /etc/network/interfaces
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# The primary/maintenance network interface
+auto eth0
+iface eth0 inet static
+	address 192.168.122.2
+	netmask 255.255.255.0
+	network 192.168.122.0
+	broadcast 192.168.122.255
+	gateway 192.168.122.1
+	dns-nameservers 8.8.8.8 8.8.4.4
+
+# Tenant network (no address directly assigned)
+auto eth1
+iface eth1 inet manual
+
+Controller: /etc/mysql/my.cnf.d/openstack.cnf:
 
 [mysqld]
 default-storage-engine = innodb
