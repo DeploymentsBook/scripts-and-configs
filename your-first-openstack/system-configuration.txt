@@ -14,7 +14,7 @@ iface eth0 inet static
 	gateway 192.168.122.1
 	dns-nameservers 8.8.8.8 8.8.4.4
 
-# Tenant network (no address directly assigned)
+# Network used by instances (no address directly assigned)
 auto eth1
 iface eth1 inet manual
 
