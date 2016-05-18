@@ -1,0 +1,8 @@
+export OS_PROJECT_DOMAIN_ID=default
+export OS_USER_DOMAIN_ID=default
+export OS_PROJECT_NAME=test
+export OS_TENANT_NAME=test
+export OS_USERNAME=test
+export OS_PASSWORD=TEST_PASSWORD
+export OS_AUTH_URL=http://controller:5000/v3
+export OS_IDENTITY_API_VERSION=3
