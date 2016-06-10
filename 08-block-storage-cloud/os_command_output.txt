@@ -1,0 +1,53 @@
+$ source /etc/openrc.test
+
+$ openstack volume create --size 1 --availability-zone nova seaotter
++---------------------+--------------------------------------+
+| Field               | Value                                |
++---------------------+--------------------------------------+
+| attachments         | []                                   |
+| availability_zone   | nova                                 |
+| bootable            | false                                |
+| consistencygroup_id | None                                 |
+| created_at          | 2016-04-15T04:19:46.086611           |
+| description         | None                                 |
+| encrypted           | False                                |
+| id                  | 53372cc5-087a-4342-a67b-397477e1a4f2 |
+| multiattach         | False                                |
+| name                | seaotter                             |
+| properties          |                                      |
+| replication_status  | disabled                             |
+| size                | 1                                    |
+| snapshot_id         | None                                 |
+| source_volid        | None                                 |
+| status              | creating                             |
+| type                | None                                 |
+| updated_at          | None                                 |
+| user_id             | aa347b98f1734f66b1331784241fa15a     |
++---------------------+--------------------------------------+
+
+$ openstack volume list
++--------------------------------------+--------------+-----------+------+----------------------------------+
+| ID                                   | Display Name | Status    | Size | Attached to                      |
++--------------------------------------+--------------+-----------+------+----------------------------------+
+| 53372cc5-087a-4342-a67b-397477e1a4f2 | seaotter     | available |    1 |                                  |
+| 54447e7a-d39d-4186-a5b4-3a5fc1e773aa | walrus       | in-use    |    1 | Attached to giraffe on /dev/vdb  |
++--------------------------------------+--------------+-----------+------+----------------------------------+
+
+$ openstack server list       
++--------------------------------------+---------+--------+------------------+
+| ID                                   | Name    | Status | Networks         |
++--------------------------------------+---------+--------+------------------+
+| 823f2d7a-f186-4453-874d-4021ff2b22e4 | giraffe | ACTIVE | private=10.0.0.3 |
++--------------------------------------+---------+--------+------------------+
+
+$ openstack server add volume giraffe seaotter
+
+$ openstack volume list
++--------------------------------------+--------------+--------+------+----------------------------------+
+| ID                                   | Display Name | Status | Size | Attached to                      |
++--------------------------------------+--------------+--------+------+----------------------------------+
+| 53372cc5-087a-4342-a67b-397477e1a4f2 | seaotter     | in-use |    1 | Attached to giraffe on /dev/vdc  |
+| 54447e7a-d39d-4186-a5b4-3a5fc1e773aa | walrus       | in-use |    1 | Attached to giraffe on /dev/vdb  |
++--------------------------------------+--------------+--------+------+----------------------------------+
+
+

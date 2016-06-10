@@ -1,0 +1,242 @@
+$ source /etc/openrc.admin
+
+$ openstack flavor list
++--------------------------------------+------------+-------+------+-----------+-------+-----------+
+| ID                                   | Name       |   RAM | Disk | Ephemeral | VCPUs | Is Public |
++--------------------------------------+------------+-------+------+-----------+-------+-----------+
+| 1                                    | m1.tiny    |   512 |    1 |         0 |     1 | True      |
+| 2                                    | m1.small   |  2048 |   20 |         0 |     1 | True      |
+| 3                                    | m1.medium  |  4096 |   40 |         0 |     2 | True      |
+| 4                                    | m1.large   |  8192 |   80 |         0 |     4 | True      |
+| 5                                    | m1.xlarge  | 16384 |  160 |         0 |     8 | True      |
+| 74fa1799-055f-4411-a8d7-55826dba7d94 | m1.smaller |   768 |    5 |         0 |     1 | True      |
++--------------------------------------+------------+-------+------+-----------+-------+-----------+
+
+$ openstack flavor create --ram 768 --disk 5 --ephemeral 0 --vcpus 1 --public m1.smaller2
++----------------------------+--------------------------------------+
+| Field                      | Value                                |
++----------------------------+--------------------------------------+
+| OS-FLV-DISABLED:disabled   | False                                |
+| OS-FLV-EXT-DATA:ephemeral  | 0                                    |
+| disk                       | 5                                    |
+| id                         | 874857cf-ca29-4dea-b121-aaf36517ac3e |
+| name                       | m1.smaller2                          |
+| os-flavor-access:is_public | True                                 |
+| ram                        | 768                                  |
+| rxtx_factor                | 1.0                                  |
+| swap                       |                                      |
+| vcpus                      | 1                                    |
++----------------------------+--------------------------------------+
+
+$ source /etc/openrc.test
+
+$ openstack image list
++--------------------------------------+---------------------+
+| ID                                   | Name                |
++--------------------------------------+---------------------+
+| 8b6b345c-1e08-426e-b24b-37df8e166ab0 | Ubuntu 14.04 Server |
+| b592fbdf-cbb9-4159-bc22-f2a591b4c348 | Cirros 0.3.4        |
++--------------------------------------+---------------------+
+
+$ wget https://cloud-images.ubuntu.com/releases/14.04.4/release/ubuntu-14.04-server-cloudimg-amd64-disk1.img
+
+$ openstack image create --container-format bare --disk-format qcow2 --min-disk 5 --min-ram 768 --file ubuntu-14.04-server-cloudimg-amd64-disk1.img "Ubuntu 14.04 Server 2"
++------------------+------------------------------------------------------+
+| Field            | Value                                                |
++------------------+------------------------------------------------------+
+| checksum         | 2a0bf21fb69d518d9c7a19dbc2d99eb7                     |
+| container_format | bare                                                 |
+| created_at       | 2016-05-02T20:12:45Z                                 |
+| disk_format      | qcow2                                                |
+| file             | /v2/images/cdeb610d-9064-4dc5-b63a-afa9a58c0f7c/file |
+| id               | cdeb610d-9064-4dc5-b63a-afa9a58c0f7c                 |
+| min_disk         | 5                                                    |
+| min_ram          | 768                                                  |
+| name             | Ubuntu 14.04 Server 2                                |
+| owner            | d49446773bfb47bab30b3c4bca06d82d                     |
+| protected        | False                                                |
+| schema           | /v2/schemas/image                                    |
+| size             | 259392000                                            |
+| status           | active                                               |
+| tags             |                                                      |
+| updated_at       | 2016-05-02T20:12:47Z                                 |
+| virtual_size     | None                                                 |
+| visibility       | private                                              |
++------------------+------------------------------------------------------+
+
+$ openstack image show "Ubuntu 14.04 Server 2"
++------------------+------------------------------------------------------+
+| Field            | Value                                                |
++------------------+------------------------------------------------------+
+| checksum         | 2a0bf21fb69d518d9c7a19dbc2d99eb7                     |
+| container_format | bare                                                 |
+| created_at       | 2016-05-02T20:12:45Z                                 |
+| disk_format      | qcow2                                                |
+| file             | /v2/images/cdeb610d-9064-4dc5-b63a-afa9a58c0f7c/file |
+| id               | cdeb610d-9064-4dc5-b63a-afa9a58c0f7c                 |
+| min_disk         | 5                                                    |
+| min_ram          | 768                                                  |
+| name             | Ubuntu 14.04 Server 2                                |
+| owner            | d49446773bfb47bab30b3c4bca06d82d                     |
+| protected        | False                                                |
+| schema           | /v2/schemas/image                                    |
+| size             | 259392000                                            |
+| status           | active                                               |
+| tags             |                                                      |
+| updated_at       | 2016-05-02T20:12:47Z                                 |
+| virtual_size     | None                                                 |
+| visibility       | private                                              |
++------------------+------------------------------------------------------+
+
+$ source /etc/openrc.test
+
+$ openstack keypair list
++-------------------+-------------------------------------------------+
+| Name              | Fingerprint                                     |
++-------------------+-------------------------------------------------+
+| elizabeth-desktop | 73:08:27:ee:8f:6d:07:0f:d3:d2:cb:2f:73:4e:38:ab |
++-------------------+-------------------------------------------------+
+
+$ openstack security group rule list default
++--------------------------------------+-------------+-----------+------------+
+| ID                                   | IP Protocol | IP Range  | Port Range |
++--------------------------------------+-------------+-----------+------------+
+| 0743e044-5707-47fa-87a7-e6a5036e9d7c | tcp         | 0.0.0.0/0 | 80:80      |
+| 3977d290-35cb-434a-8408-c886dd6e5887 | icmp        | 0.0.0.0/0 |            |
+| 52d61ae0-6518-41de-831c-ebe9f0918cc0 |             |           |            |
+| 742da90f-515a-47cc-b8c0-577ebb178ec8 | tcp         | 0.0.0.0/0 | 22:22      |
+| 77d0bbfe-2fa1-4f7b-bc4a-57e09161e9c3 |             |           |            |
++--------------------------------------+-------------+-----------+------------+
+
+$ ssh-keygen -t rsa
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/elizabeth/.ssh/id_rsa): 
+Created directory '/home/elizabeth/.ssh'.
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /home/elizabeth/.ssh/id_rsa.
+Your public key has been saved in /home/elizabeth/.ssh/id_rsa.pub.
+The key fingerprint is:
+f6:9f:93:ab:ac:14:19:59:fc:72:6a:00:6f:71:31:cb elizabeth@control1
+The key's randomart image is:
++--[ RSA 2048]----+
+|         .+.     |
+|      . .+oo     |
+|       oooE.     |
+|        +o. o    |
+|       .S. +     |
+|       . oo      |
+|        ...  .   |
+|       . . .o.   |
+|        ..o.+o   |
++-----------------+
+
+$ openstack keypair create --public-key .ssh/id_rsa.pub elizabeth-control
++-------------+-------------------------------------------------+
+| Field       | Value                                           |
++-------------+-------------------------------------------------+
+| fingerprint | f6:9f:93:ab:ac:14:19:59:fc:72:6a:00:6f:71:31:cb |
+| name        | elizabeth-control                               |
+| user_id     | e542c1e48d8d4373978f6ef272424b6d                |
++-------------+-------------------------------------------------+
+
+$ openstack keypair list
++-------------------+-------------------------------------------------+
+| Name              | Fingerprint                                     |
++-------------------+-------------------------------------------------+
+| elizabeth-control | f6:9f:93:ab:ac:14:19:59:fc:72:6a:00:6f:71:31:cb |
+| elizabeth-desktop | 73:08:27:ee:8f:6d:07:0f:d3:d2:cb:2f:73:4e:38:ab |
++-------------------+-------------------------------------------------+
+
+$ openstack security group rule create --proto tcp --src-ip 0.0.0.0/0 --dst-port 443:443 default
++-----------------+--------------------------------------+
+| Field           | Value                                |
++-----------------+--------------------------------------+
+| group           | {}                                   |
+| id              | c7a9c2d1-3f4c-4de5-999a-355db60f0ebc |
+| ip_protocol     | tcp                                  |
+| ip_range        | 0.0.0.0/0                            |
+| parent_group_id | 4e0a1f03-b869-49ec-9a06-2ff2b14db985 |
+| port_range      | 443:443                              |
++-----------------+--------------------------------------+
+
+$ openstack security group rule list default
++--------------------------------------+-------------+-----------+------------+
+| ID                                   | IP Protocol | IP Range  | Port Range |
++--------------------------------------+-------------+-----------+------------+
+| 0743e044-5707-47fa-87a7-e6a5036e9d7c | tcp         | 0.0.0.0/0 | 80:80      |
+| 3977d290-35cb-434a-8408-c886dd6e5887 | icmp        | 0.0.0.0/0 |            |
+| 52d61ae0-6518-41de-831c-ebe9f0918cc0 |             |           |            |
+| 742da90f-515a-47cc-b8c0-577ebb178ec8 | tcp         | 0.0.0.0/0 | 22:22      |
+| 77d0bbfe-2fa1-4f7b-bc4a-57e09161e9c3 |             |           |            |
+| c7a9c2d1-3f4c-4de5-999a-355db60f0ebc | tcp         | 0.0.0.0/0 | 443:443    |
++--------------------------------------+-------------+-----------+------------+
+
+$ source /etc/openrc.test
+
+$ openstack server create --image "Ubuntu 14.04 Server 2" --flavor m1.smaller2 --security-group default --key-name elizabeth-desktop --availability-zone nova --nic net-id=Network1 ferret
++--------------------------------------+--------------------------------------------------------------+
+| Field                                | Value                                                        |
++--------------------------------------+--------------------------------------------------------------+
+| OS-DCF:diskConfig                    | MANUAL                                                       |
+| OS-EXT-AZ:availability_zone          | nova                                                         |
+| OS-EXT-STS:power_state               | 0                                                            |
+| OS-EXT-STS:task_state                | scheduling                                                   |
+| OS-EXT-STS:vm_state                  | building                                                     |
+| OS-SRV-USG:launched_at               | None                                                         |
+| OS-SRV-USG:terminated_at             | None                                                         |
+| accessIPv4                           |                                                              |
+| accessIPv6                           |                                                              |
+| addresses                            |                                                              |
+| adminPass                            | Hq69dynxZeBD                                                 |
+| config_drive                         |                                                              |
+| created                              | 2016-03-28T18:12:56Z                                         |
+| flavor                               | m1.smaller2 (874857cf-ca29-4dea-b121-aaf36517ac3e)           |
+| hostId                               |                                                              |
+| id                                   | 41887a02-1efa-4b4d-8f64-d31c68da066e                         |
+| image                                | Ubuntu 14.04 Server 2 (dd05b2e4-afa2-4c33-a99c-2f68b7312951) |
+| key_name                             | elizabeth-desktop                                            |
+| name                                 | ferret                                                       |
+| os-extended-volumes:volumes_attached | []                                                           |
+| progress                             | 0                                                            |
+| project_id                           | 44f0be93c3524ad59aab0e8f7a154aff                             |
+| properties                           |                                                              |
+| security_groups                      | [{u'name': u'default'}]                                      |
+| status                               | BUILD                                                        |
+| updated                              | 2016-03-28T18:12:57Z                                         |
+| user_id                              | e542c1e48d8d4373978f6ef272424b6d                             |
++--------------------------------------+--------------------------------------------------------------+
+
+$ openstack server list
++--------------------------------------+--------+--------+----------------------+
+| ID                                   | Name   | Status | Networks             |
++--------------------------------------+--------+--------+----------------------+
+| 41887a02-1efa-4b4d-8f64-d31c68da066e | ferret | ACTIVE | Network1=10.190.0.13 |
++--------------------------------------+--------+--------+----------------------+
+
+$ openstack ip floating list
++--------------------------------------+---------+-------------+----------+-------------+
+| ID                                   | Pool    | IP          | Fixed IP | Instance ID |
++--------------------------------------+---------+-------------+----------+-------------+
+| 45744a5f-8cd4-4554-a6f1-4666353be00d | ext-net | 203.0.113.8 | None     | None        |
++--------------------------------------+---------+-------------+----------+-------------+
+
+$ openstack ip floating create ext-net
++-------------+--------------------------------------+
+| Field       | Value                                |
++-------------+--------------------------------------+
+| fixed_ip    | None                                 |
+| id          | d8cc6592-efc2-450e-9726-ccf91d1a05c2 |
+| instance_id | None                                 |
+| ip          | 203.0.113.10                         |
+| pool        | ext-net                              |
++-------------+--------------------------------------+
+
+$ openstack ip floating add 203.0.113.10 ferret
+
+$ openstack server list
++--------------------------------------+--------+--------+------------------------------------+
+| ID                                   | Name   | Status | Networks                           |
++--------------------------------------+--------+--------+------------------------------------+
+| 41887a02-1efa-4b4d-8f64-d31c68da066e | ferret | ACTIVE | Network1=10.190.0.13, 203.0.113.10 |
++--------------------------------------+--------+--------+------------------------------------+
