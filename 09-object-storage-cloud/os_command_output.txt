@@ -1,0 +1,69 @@
+$ source /etc/openrc.test
+
+$ openstack container create aquarium
++--------------------------------------+-----------+------------------------------------+
+| account                              | container | x-trans-id                         |
++--------------------------------------+-----------+------------------------------------+
+| KEY_33a65b0402b047c097d21864b72c06be | aquarium  | tx8d138f08d743482a88735-00571c050f |
++--------------------------------------+-----------+------------------------------------+
+
+$ openstack object create aquarium octopus.txt 
++-------------+-----------+----------------------------------+
+| object      | container | etag                             |
++-------------+-----------+----------------------------------+
+| octopus.txt | aquarium  | 22d8654098afd1eeb1d22c5801c5466d |
++-------------+-----------+----------------------------------+
+
+elizabeth@control1:~$ openstack object create aquarium tuna.txt
++----------+-----------+----------------------------------+
+| object   | container | etag                             |
++----------+-----------+----------------------------------+
+| tuna.txt | aquarium  | 1bef3811c46128a7b5d48d46ff04d9de |
++----------+-----------+----------------------------------+
+
+$ openstack object list aquarium
++-------------+
+| Name        |
++-------------+
+| octopus.txt |
+| tuna.txt    |
++-------------+
+
+$ openstack container show aquarium
++--------------+--------------------------------------+
+| Field        | Value                                |
++--------------+--------------------------------------+
+| account      | KEY_33a65b0402b047c097d21864b72c06be |
+| bytes_used   | 92                                   |
+| container    | aquarium                             |
+| object_count | 2                                    |
++--------------+--------------------------------------+
+
+$ openstack object show aquarium dolphin.jpg
++----------------+--------------------------------------+
+| Field          | Value                                |
++----------------+--------------------------------------+
+| account        | KEY_33a65b0402b047c097d21864b72c06be |
+| container      | aquarium                             |
+| content-length | 172154                               |
+| content-type   | image/jpeg                           |
+| etag           | 3b67f3cdf756bc0e3df05820398251bb     |
+| last-modified  | Sat, 23 Apr 2016 23:43:15 GMT        |
+| object         | dolphin.jpg                          |
+| properties     | Orig-Filename='dolphin.jpg'          |
++----------------+--------------------------------------+
+
+$ openstack container show zoo
++--------------+--------------------------------------+
+| Field        | Value                                |
++--------------+--------------------------------------+
+| account      | KEY_33a65b0402b047c097d21864b72c06be |
+| bytes_used   | 93268                                |
+| container    | zoo                                  |
+| object_count | 4                                    |
+| read_acl     | .r:*,.rlistings                      |
++--------------+--------------------------------------+
+
+$ swift post -r .r:*,.rlistings zoo
+
+
